@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Autor extends Model
 {
@@ -15,8 +15,8 @@ class Autor extends Model
         'biografia',
     ];
 
-    public function livros()
+    public function livros() : BelongsToMany
     {
-        return $this->HasMany(Livro::class);
+        return $this->BelongsToMany(Livro::class, 'livro_autor');
     }
 }

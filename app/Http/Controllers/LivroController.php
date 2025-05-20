@@ -16,8 +16,12 @@ class LivroController extends Controller
 
     public function show(Livro $livro): JsonResponse
     {
-        $livro = (new LivroService())->find($livro);
-        return LivroResource::make($livro);
+        try {
+            $livro = (new LivroService())->find($livro);
+            return LivroResource::make($livro);
+        } catch (Exception $exception) {
+            return response()->json(['status' => false , 'message' =>'Livro não encontrado'], 404);
+        }
     }
 
     public function store(Request $request)
@@ -26,12 +30,15 @@ class LivroController extends Controller
             'titulo' => ['required', 'string', 'min:3'],
             'data_publicacao'=> ['date', 'required'],
             'sinopse' => ['nullable', 'string'],
+            'autores' => ['nullable', 'array:id']
         ]);
 
-        (new LivroService())->create($validated);
-
-        return response()->json(['success' => 'Livro cadastrado com sucesso', 'livro' => $livro], 201);
-
+        try {
+            $livro = (new LivroService())->create($validated);
+            return response()->json(['success' => 'Livro cadastrado com sucesso', 'livro' => $livro], 201);
+        }  catch (Exception $exception) {
+            return response()->json(['error' => false, 'message' => $exception->getMessage()], 422);
+        }
     }
 
     public function update(Request $request, Livro $livro): JsonResponse
@@ -40,11 +47,15 @@ class LivroController extends Controller
             'titulo' => ['required', 'string', 'min:3'],
             'data_publicacao'=> ['date', 'required'],
             'sinopse' => ['nullable', 'string'],
+            'autores' => ['nullable', 'array:id']
         ]);
 
-        (new LivroService())->update($validated, $livro);
-
-        return response()->json(['success' => 'Livro atualizado com sucesso', 'livro' => $livro], 201);
+        try {
+            (new LivroService())->update($validated, $livro);
+            return response()->json(['success' => 'Livro atualizado com sucesso', 'livro' => $livro], 201);
+        } catch (Exception $exception) {
+            return response()->json(['error' => false, 'message' => 'Falha ao alterar livro'], 422);
+        }
     }
 
     public function destroy(Livro $livro): JsonResponse
@@ -54,6 +65,26 @@ class LivroController extends Controller
             return response()->json([], 202);
         } catch (Exception $exception) {
             return response()->json(['status' => false, 'message' => $exception->getMessage()], 422);
+        }
+    }
+
+    public function adicionarAutores(Livro $livro, array $autores)
+    {
+        try {
+            (new LivroService())->adicionarAutores($livro, $autores);
+            return response()->json(['success' => 'Autores adicionados com sucesso'], 200);
+        } catch (Exception $exception) {
+            return response()->json(['error' => 'Falha ao inserir autores', 'message' => $exception->getMessage(), 422]);
+        }
+    }
+
+    public function removerAutores(Livro $livro, array $autores)
+    {
+        try {
+            (new LivroService())->removerAutores($livro, $autores);
+            return response()->json(['success' => 'Autores removidos com sucesso'], 200);
+        } catch (Exception $exception) {
+            return response()->json(['error' => 'Falha ao remover autores', 'message' => $exception->getMessage(), 422]);
         }
     }
 }

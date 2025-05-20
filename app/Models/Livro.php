@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 
 class Livro extends Model
@@ -18,5 +19,10 @@ class Livro extends Model
     public function editora(): BelongsTo
     {
         return $this->belongsTo(Editora::class);
+    }
+
+    public function autores(): BelongsToMany
+    {
+        return $this->BelongsToMany(Autor::class, 'livro_autor');
     }
 }
