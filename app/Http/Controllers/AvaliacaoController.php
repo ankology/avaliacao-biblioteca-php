@@ -3,21 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use App\Models\Avaliacao;
 use App\Services\AvaliacaoService;
 
 class AvaliacaoController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $avaliacoes = (new AvaliacaoService())->list();
-        return AvaliacaoResource::collection($autores);
+        $avaliacoes = (new AvaliacaoService())->list($request->get('search', ''));
+        return response()->json($avaliacoes);
     }
 
-    public function show(): JsonResponse
+    public function show(Avaliacao $avaliacao): JsonResponse
     {
-        $avaliacao = (new AvaliacaoService())->find($avaliacao);
-        return AvaliacaoResource::make($avaliacao);
+        return response()->json((new AvaliacaoService())->find($avaliacao));
     }
 
     public function store(Request $request)
@@ -31,7 +31,7 @@ class AvaliacaoController extends Controller
 
         $avaliacao = (new AvaliacaoService())->create($validated);
 
-        return response()->json(['success' => 'Avaliacao salva com sucesso', 'editora' => $editora], 201);
+        return response()->json(['success' => 'Avaliacao salva com sucesso', 'avaliacao' => $avaliacao], 201);
 
     }
 
@@ -44,9 +44,9 @@ class AvaliacaoController extends Controller
             'usuario_id' => ['integer'],
         ]);
     
-        $avaliacao = (new AvaliacaoService())->update($validated, $avaliacao);
+        (new AvaliacaoService())->update($validated, $avaliacao);
 
-        return response()->json(['success' => 'Avaliacao alterada com sucesso', 'editora' => $editora], 201);
+        return response()->json(['success' => 'Avaliacao alterada com sucesso'], 201);
 
     }
 
@@ -54,7 +54,7 @@ class AvaliacaoController extends Controller
     {
         try {
             (new AvaliacaoService())->destroy($avaliacao);
-            return response()->json([], 202);
+            return response()->json(['success' => 'Avaliação removida com sucesso'], 202);
         } catch (Exception $exception) {
             return response()->json(['status' => false, 'message' => $exception->getMessage()], 422);
         }

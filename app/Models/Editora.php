@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Editora extends Model
 {
+    protected $table = 'editora';
+    
     protected $fillable = [
         'nome',
         'descricao',

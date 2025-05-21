@@ -1,0 +1,17 @@
+meta {
+  name: store
+  type: http
+  seq: 2
+}
+
+post {
+  url: localhost/api/livros
+  body: multipartForm
+  auth: none
+}
+
+body:multipart-form {
+  titulo: "Valinhos, uma história de luta"
+  data_publicacao: 2001-05-20
+  editora_id: 1
+}

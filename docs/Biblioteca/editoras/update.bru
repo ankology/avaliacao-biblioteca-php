@@ -1,0 +1,25 @@
+meta {
+  name: update
+  type: http
+  seq: 4
+}
+
+put {
+  url: localhost/api/editoras/:id
+  body: formUrlEncoded
+  auth: none
+}
+
+params:path {
+  id: 1
+}
+
+body:form-urlencoded {
+  nome: amanhecer
+  descricao: amanhecer
+}
+
+body:multipart-form {
+  nome: Amanhecer
+  descricao: Amanhecer
+}

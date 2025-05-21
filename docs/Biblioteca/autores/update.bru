@@ -1,0 +1,25 @@
+meta {
+  name: update
+  type: http
+  seq: 3
+}
+
+put {
+  url: localhost/api/autores/:id
+  body: formUrlEncoded
+  auth: none
+}
+
+params:path {
+  id: 1
+}
+
+body:form-urlencoded {
+  nome: Gilmar francisco
+  data_nascimento: 1985-09-09
+}
+
+body:multipart-form {
+  nome: Gilmar francisco
+  data_nascimento: 2009-05-01
+}

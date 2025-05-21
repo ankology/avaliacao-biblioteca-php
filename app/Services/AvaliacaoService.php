@@ -1,13 +1,21 @@
 <?php
 
 namespace App\Services;
+use App\Models\Avaliacao;
 
 class AvaliacaoService
 {
-    public function list(array $params): Collection
+    public function list(string $search)
     {
         try {
-            return Avaliacao::all()->orderBy('created_at')->paginate();
+            return Avaliacao::orderBy('created_at', 'desc')
+                ->where('usuario_id', $search)
+                ->where('livro_id', $search)
+                ->where('nota', $search)
+                ->with('usuario')
+                ->with('livro')
+                ->paginate();
+
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage(), 422);
         }
@@ -16,16 +24,18 @@ class AvaliacaoService
 
     public function find(Avaliacao $avaliacao)
     {
-        return Avaliacao::find($avaliacao);
+        return Avaliacao::find($avaliacao)
+                            ->with('usuario')
+                            ->with('livro');
     }
 
     public function create($request_validated)
     { 
         return Avaliacao::create([
-            'usuario_id' => $request_validated->usuario_id,
-            'livro' => $request_validated->livro,
-            'nota' => $request_validated->nota,
-            'descricao' => $request_validated->descricao ?? '',
+            'usuario_id' => $request_validated['usuario_id'],
+            'livro_id' => $request_validated['livro_id'],
+            'nota' => $request_validated['nota'],
+            'descricao' => $request_validated['descricao'] ?? '',
         ]);
 
     }
@@ -33,10 +43,10 @@ class AvaliacaoService
     public function update($request_validated, Avaliacao $avaliacao)
     {   
         $avaliacao->update([
-            'usuario_id' => $request_validated->usuario_id,
-            'livro' => $request_validated->livro,
-            'nota' => $request_validated->nota,
-            'descricao' => $request_validated->descricao ?? '',
+            'usuario_id' => $request_validated['usuario_id'],
+            'livro_id' => $request_validated['livro_id'],
+            'nota' => $request_validated['nota'],
+            'descricao' => $request_validated['descricao'] ?? '',
         ]);
 
         return $avaliacao;

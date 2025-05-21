@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Services\EditoraService;
 use App\Models\Editora;
 
 class EditoraController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $editoras = (new EditoraService())->list();
+        $editoras = (new EditoraService())->list($request->get('search', ''));
+        return response()->json($editoras);
         return EditoraResource::collection($editoras);
     }
 
     public function show(Editora $editora): JsonResponse
     {
-        $editora = (new EditoraService())->find($editora);
-        return EditoraResource::make($editora);
+        return response()->json([$editora]);
     }
 
     public function store(Request $request)
@@ -29,16 +30,18 @@ class EditoraController extends Controller
 
         $editora = (new EditoraService())->create($validated);
 
-        return response()->json(['success' => 'Editora cadastrado com sucesso', 'editora' => $editora], 201);
+        return response()->json(['success' => 'Editora cadastrada com sucesso', 'editora' => $editora], 201);
 
     }
 
-    public function update(Editora $editora): JsonResponse
+    public function update(Request $request, Editora $editora): JsonResponse
     {
         $validated = $request->validate([
             'nome' => ['required', 'string', 'min:3'],
             'descricao'=> ['string', 'nullable'],
         ]);
+
+        
 
         $editora = (new EditoraService())->update($validated, $editora);
 
@@ -49,7 +52,7 @@ class EditoraController extends Controller
     {
         try {
             (new EditoraService())->destroy($editora);
-            return response()->json([], 202);
+            return response()->json(['success' => 'Editora removida com sucesso'], 200);
         } catch (Exception $exception) {
             return response()->json(['status' => false, 'message' => $exception->getMessage()], 422);
         }

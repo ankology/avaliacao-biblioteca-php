@@ -1,0 +1,23 @@
+meta {
+  name: adicionarAutores
+  type: http
+  seq: 6
+}
+
+post {
+  url: localhost/api/livros/:id/autores
+  body: json
+  auth: none
+}
+
+params:path {
+  id: 1
+}
+
+body:json {
+  {"autores": [3, 4]}
+}
+
+body:form-urlencoded {
+  autores[]: 
+}

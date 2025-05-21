@@ -9,20 +9,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Livro extends Model
 {
+    protected $table = 'livro';
     protected $fillable = [
-        'editora_id',
         'titulo',
         'data_publicacao',
         'sinopse',
+        'editora_id',
     ];
 
     public function editora(): BelongsTo
     {
-        return $this->belongsTo(Editora::class);
+        return $this->belongsTo(Editora::class, 'editora_id');
     }
 
     public function autores(): BelongsToMany
     {
-        return $this->BelongsToMany(Autor::class, 'livro_autor');
+        return $this->belongsToMany(Autor::class, 'livro_autor', 'livro_id', 'autor_id');
     }
 }

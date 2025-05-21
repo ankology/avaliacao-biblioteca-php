@@ -5,26 +5,23 @@ use App\Models\Autor;
 
 class AutorService
 {
-    public function list(array $params): Collection
+    public function list(string $search)
     {
         try {
-            return Autor::all()->orderBy('nome')->paginate();
+            return Autor::orderBy('nome')
+                        ->where('nome', 'like', "%$search%")
+                        ->paginate();
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage(), 422);
         }
     }
 
-    public function find(Autor $autor)
-    {
-        return Autor::find($autor);
-    }
-
     public function create($request_validated)
     { 
         return Autor::create([
-            'nome' => $request_validated->nome,
-            'data_nascimento' => $request_validated->data_nascimento,
-            'biografia' => $request_validated->biografia ?? '',
+            'nome' => $request_validated['nome'],
+            'data_nascimento' => $request_validated['data_nascimento'],
+            'biografia' => $request_validated['biografia'] ?? '',
         ]);
 
     }
@@ -32,9 +29,9 @@ class AutorService
     public function update($request_validated, Autor $autor)
     {   
         $autor->update([
-            'nome' => $request_validated->nome,
-            'data_nascimento' => $request_validated->data_nascimento,
-            'biografia' => $request_validated->biografia ?? '',
+            'nome' => $request_validated['nome'],
+            'data_nascimento' => $request_validated['data_nascimento'],
+            'biografia' => $request_validated['biografia'] ?? '',
         ]);
 
         return $autor;
@@ -42,6 +39,6 @@ class AutorService
 
     public function destroy(Autor $autor)
     {   
-        return $autor->delete();
+        print_r($autor->delete());
     }
 }

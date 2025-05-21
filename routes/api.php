@@ -18,9 +18,9 @@ Route::apiResource('usuarios', UsuarioController::class);
 
 Route::apiResource('livros', LivroController::class);
 
-Route::post('livros/{id}/autores', [LivroController::class, 'adicionarAutores']);
+Route::post('livros/{livro}/autores', [LivroController::class, 'adicionarAutores']);
 
-Route::delete('livros/{id}/autores', [LivroController::class, 'removerAutores']);
+Route::delete('livros/{livro}/autores', [LivroController::class, 'removerAutores']);
 
 Route::apiResource('editoras', EditoraController::class);
 

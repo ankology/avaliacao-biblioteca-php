@@ -1,0 +1,17 @@
+meta {
+  name: store
+  type: http
+  seq: 2
+}
+
+post {
+  url: localhost/api/autores
+  body: formUrlEncoded
+  auth: none
+}
+
+body:form-urlencoded {
+  nome: Laurindo Pires
+  data_nascimento: 1975-09-23
+  biografia: Laurindo Pires é um escritor Norte-Americanos formado pela universidade de Oxford e tem grande talento com contos infantis.
+}

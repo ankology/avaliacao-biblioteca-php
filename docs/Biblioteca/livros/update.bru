@@ -1,0 +1,27 @@
+meta {
+  name: update
+  type: http
+  seq: 4
+}
+
+put {
+  url: localhost/api/livros/:id
+  body: formUrlEncoded
+  auth: none
+}
+
+params:path {
+  id: 2
+}
+
+body:form-urlencoded {
+  titulo: amor a prova
+  data_publicacao: 2024-05-20
+  editora_id: 1
+}
+
+body:multipart-form {
+  titulo: Amor a prova
+  data_publicacao: 2004-03-22
+  editora_id: 1
+}

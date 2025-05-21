@@ -1,0 +1,19 @@
+meta {
+  name: removerAutores
+  type: http
+  seq: 7
+}
+
+delete {
+  url: localhost/api/livros/:id/autores
+  body: json
+  auth: none
+}
+
+params:path {
+  id: 1
+}
+
+body:json {
+  {"autores": [3, 4]}
+}

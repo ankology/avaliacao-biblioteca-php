@@ -3,21 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use App\Models\Autor;
 use App\Services\AutorService;
 
 class AutorController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $autores = (new AutorService())->list();
-        return AutorResource::collection($autores);
+        $autores = (new AutorService())->list($request->get('search', ''));
+        return response()->json($autores);
     }
 
-    public function show(Autor $autor): JsonResponse
+    public function show(Autor $autore): JsonResponse
     {
-        $autor = (new AutorService())->find($autor);
-        return AutorResource::make($autor);
+        return response()->json($autore);
     }
 
     public function store(Request $request)
@@ -30,11 +30,11 @@ class AutorController extends Controller
 
         $autor = (new AutorService())->create($validated);
 
-        return response()->json(['success' => 'Autor cadastrado com sucesso', 'editora' => $editora], 201);
+        return response()->json(['success' => 'Autor cadastrado com sucesso', 'autor' => $autor], 201);
 
     }
 
-    public function update(Autor $autor)
+    public function update(Request $request, Autor $autor)
     {
         $validated = $request->validate([
             'nome' => ['required', 'string', 'min:3'],
@@ -44,14 +44,14 @@ class AutorController extends Controller
         
         $autor = (new AutorService())->update($validated, $autor);
 
-        return response()->json(['success' => 'Autor atualizada com sucesso', 'editora' => $editora], 201);
+        return response()->json(['success' => 'Autor atualizado com sucesso'], 201);
     }
 
-    public function destroy(Autor $autor)
+    public function destroy(Autor $autore)
     {
         try {
-            (new AutorService())->destroy($autor);
-            return response()->json([], 202);
+            (new AutorService())->destroy($autore);
+            return response()->json(['success'=> 'Autor deletado com sucesso'], 202);
         } catch (Exception $exception) {
             return response()->json(['status' => false, 'message' => $exception->getMessage()], 422);
         }

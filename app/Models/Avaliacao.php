@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Avaliacao extends Model
 {
+    protected $table = 'avaliacao';
+    
     protected $fillable = [
         'nota',
         'descricao',
@@ -16,11 +18,11 @@ class Avaliacao extends Model
 
     public function usuario() : BelongsTo
     {
-        return $this->BelongsTo(Usuario::class);
+        return $this->BelongsTo(Usuario::class, 'usuario_id');
     }
 
     public function livro() : BelongsTo
     {
-        return $this->belongsTo(Livro::class);
+        return $this->BelongsTo(Livro::class);
     }
 }

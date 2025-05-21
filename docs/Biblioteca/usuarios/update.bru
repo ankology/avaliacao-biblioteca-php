@@ -1,0 +1,27 @@
+meta {
+  name: update
+  type: http
+  seq: 3
+}
+
+put {
+  url: localhost/api/usuarios/:id
+  body: formUrlEncoded
+  auth: none
+}
+
+params:path {
+  id: 1
+}
+
+body:form-urlencoded {
+  nome: Pamela
+  email: pamela@gmail.com
+  senha: pamela123
+}
+
+body:multipart-form {
+  nome: Ana de fatima
+  email: ana@gmail.com
+  senha: teste123
+}

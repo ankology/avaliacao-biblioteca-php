@@ -9,5 +9,3 @@ Route::get('/', function () {
 
     return view('welcome');
 });
-
-Route::get('/livros', [LivroController::class, 'list']);

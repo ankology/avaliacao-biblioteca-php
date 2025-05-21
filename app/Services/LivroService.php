@@ -7,16 +7,13 @@ use App\Models\Livro;
 
 class LivroService
 {
-    public function list(array $params): Collection
+    public function list(string $search)
     {
-        try {
-            return Livro::all()->orderBy('titulo')
-                                ->with('autores')
-                                ->with('editora')
-                                ->paginate();
-        } catch (Exception $exception) {
-            throw new Exception($exception->getMessage(), 422);
-        }
+        return Livro::orderBy('titulo')
+                        ->with('autores')
+                        ->with('editora')
+                        ->where('titulo', 'like', "%$search%")
+                        ->paginate();
     }
 
     public function find(Livro $livro)
@@ -24,17 +21,17 @@ class LivroService
         return Livro::find($livro)->with('autores')->with('editora')->get();
     }
 
-    public function create($request_validated)
+    public function create(array $request_validated)
     { 
         $livro = Livro::create([
-            'editora_id' => $request_validated->editora_id,
-            'titulo' => $request_validated->titulo,
-            'data_publicacao' => $request_validated->data_publicacao,
-            'sinopse' => $request_validated->sinopse ?? '',
+            'editora_id' => $request_validated['editora_id'],
+            'titulo' => $request_validated['titulo'],
+            'data_publicacao' => $request_validated['data_publicacao'],
+            'sinopse' => $request_validated['sinopse'] ?? '',
         ]);
 
-        if($request_validated->autores) {
-            $livro->attach($request_validated->autores);
+        if(isset($request_validated['autores'])) {
+            $livro->attach($request_validated['autores']);
         }
 
         return $livro;
@@ -43,14 +40,14 @@ class LivroService
     public function update($request_validated, Livro $livro)
     {   
         $livro->update([
-            'editora_id' => $request_validated->editora_id,
-            'titulo' => $request_validated->titulo,
-            'data_publicacao' => $request_validated->data_publicacao,
-            'sinopse' => $request_validated->sinopse ?? '',
+            'editora_id' => $request_validated['editora_id'],
+            'titulo' => $request_validated['titulo'],
+            'data_publicacao' => $request_validated['data_publicacao'],
+            'sinopse' => $request_validated['sinopse'] ?? '',
         ]);
 
-        if($request_validated->autores) {
-            $livro->attach($request_validated->autores);
+        if(isset($request_validated['autores'])) {
+            $livro->attach($request_validated['autores']);
         }
 
         return $livro;

@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Autor extends Model
 {
-    protected $primaryKey = 'autor_id';
+   
+    protected $table = 'autor';
 
     protected $fillable = [
         'nome',
@@ -17,6 +18,6 @@ class Autor extends Model
 
     public function livros() : BelongsToMany
     {
-        return $this->BelongsToMany(Livro::class, 'livro_autor');
+        return $this->BelongsToMany(Livro::class, 'livro_autor', 'autor_id', 'livro_id');
     }
 }
